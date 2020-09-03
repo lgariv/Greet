@@ -163,9 +163,8 @@ UIVisualEffectView *visualEffectView;
 
         [[self view] addSubview:visualEffectView];
         [[self view] addSubview:[DNDVC view]];
-        //[[self view] sendSubviewToBack:[DNDVC view]];
+        [[self view] sendSubviewToBack:[DNDVC view]];
         [[self view] sendSubviewToBack:visualEffectView];
-    } completion:^(BOOL finished){
     }];
 }
 %end
@@ -182,6 +181,25 @@ UIVisualEffectView *visualEffectView;
 }
 %end
 
+@interface SBFTouchPassThroughView : UIView
+@end
+
+%hook SBFTouchPassThroughView
+-(id)hitTest:(CGPoint)arg1 withEvent:(id)arg2 {
+    if ([[self superview] isKindOfClass:[%c(CSCoverSheetView) class]] && DNDVC) if ([DNDVC view].alpha == 1) {
+        [UIView animateWithDuration:0.25 animations:^{
+            visualEffectView.alpha = 0;
+            [DNDVC view].alpha = 0;
+        } completion:^(BOOL finished){
+            [visualEffectView removeFromSuperview];
+            [[DNDVC view] removeFromSuperview];
+            visualEffectView = nil;
+            DNDVC = nil;
+        }];
+    }
+    return %orig;
+}
+%end
 
 #pragma mark Handle preferences
 
