@@ -18,6 +18,9 @@
 @end
 
 @interface CSCombinedListViewController : UIViewController
+-(void)_evaluateShouldShowGreeting:(id)arg1 animated:(BOOL)arg2 ;
+-(void)_setFooterCallToActionLabelHidden:(BOOL)arg1 ;
+-(void)_setDisableScrolling:(BOOL)arg1 ;
 @end
 
 @interface UIBlurEffect ()
@@ -28,31 +31,63 @@
 #pragma mark Variables
 
 static CSDNDBedtimeGreetingViewController *DNDVC = nil;
+static CSDNDBedtimeGreetingViewController *DNDC = nil;
 
 
 #pragma mark Hooks
 
-%hook CSCombinedListViewController
+@interface CSCoverSheetView : UIView
+@end
+
+%hook CSCoverSheetView
+-(id)initWithFrame:(CGRect)arg1 {
+    %orig;
+    
+    if (DNDVC != nil) return self;
+    DNDVC = [[%c(CSDNDBedtimeGreetingViewController) alloc] initWithLegibilityPrimaryColor:[UIColor whiteColor]];
+    
+    [DNDVC loadView];
+    [[DNDVC view] setDelegate:DNDVC];
+
+    UIVisualEffect *blurEffect = [UIBlurEffect effectWithBlurRadius:30.0f];
+    UIVisualEffectView *visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    visualEffectView.frame = self.bounds;
+
+    [self addSubview:visualEffectView];
+    [self addSubview:[DNDVC view]];
+    [self sendSubviewToBack:[DNDVC view]];
+    [self sendSubviewToBack:visualEffectView];
+
+    return self;
+}
+%end
+
+/*%hook CSCombinedListViewController
 -(void)viewDidAppear:(BOOL)arg1 {
     %orig;
+
     if (DNDVC != nil) return;
     DNDVC = [[%c(CSDNDBedtimeGreetingViewController) alloc] initWithLegibilityPrimaryColor:[UIColor whiteColor]];
-    DNDVC.modalPresentationStyle = UIModalPresentationFullScreen;
-    [DNDVC setDelegate:self];
+    
+    //DNDC = [[%c(CSDNDBedtimeController) alloc] init];
+    //[self _evaluateShouldShowGreeting:DNDC animated:YES];
+    //return;
+    
     [DNDVC loadView];
-    UIVisualEffect *blurEffect;
-    blurEffect = [UIBlurEffect effectWithBlurRadius:30.0f];
-    UIVisualEffectView *visualEffectView;
-    visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    [[DNDVC view] setDelegate:DNDVC];
+
+    UIVisualEffect *blurEffect = [UIBlurEffect effectWithBlurRadius:30.0f];
+    UIVisualEffectView *visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
     visualEffectView.frame = [self view].bounds;
+
     [[self view] addSubview:visualEffectView];
     [[self view] addSubview:[DNDVC view]];
     [[self view] sendSubviewToBack:[DNDVC view]];
     [[self view] sendSubviewToBack:visualEffectView];
-    //[self _setFooterCallToActionLabelHidden:YES];
-    //[[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:DNDVC animated:NO completion:nil];
+
+    [self _setFooterCallToActionLabelHidden:YES];
 }
-%end
+%end*/
 
 
 #pragma mark Handle preferences
