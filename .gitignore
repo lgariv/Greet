@@ -1,0 +1,8 @@
+# Folders
+packages
+.vscode
+.theos
+
+# Files
+*.deb
+.DS_Store
