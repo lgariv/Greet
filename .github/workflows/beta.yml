@@ -74,10 +74,3 @@ jobs:
         asset_path: ./packages/${{ steps.build_package.outputs.package }}
         asset_name: ${{ steps.build_package.outputs.package }}
         asset_content_type: application/vnd.debian.binary-package
-    - name: test
-      uses: avakar/set-deployment-status@v1
-      if: always()
-      with:
-        state: ${{ success() }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
