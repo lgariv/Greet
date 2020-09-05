@@ -36,7 +36,6 @@ jobs:
       run: |
         set +e
         git fetch --prune --unshallow --tags
-        set -e
         VERSION="$(cat control | grep Version | sed -n 's/Version: //gp')"
         echo "::set-env name=TWEAK_VER::$VERSION"
         CUR_TAG="$(git tag -l | grep beta)"
@@ -45,6 +44,8 @@ jobs:
         else
           echo "::set-env name=OLD_PRE_TAG::$CUR_TAG"
         fi
+        exit 0
+        set -e
     - name: Delete Old Prerelease
       uses: dev-drprasad/delete-tag-and-release@v0.1.2
       if: ${{ success() }}
