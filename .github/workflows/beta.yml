@@ -40,7 +40,7 @@ jobs:
         echo "::set-env name=TWEAK_VER::$VERSION"
         CUR_TAG="$(git tag -l | grep beta)"
         if [[ -z $CUR_TAG ]]; then
-          echo "::set-env name=OLD_PRE_TAG::NULL"
+          echo "::set-env name=OLD_PRE_TAG::"
         else
           echo "::set-env name=OLD_PRE_TAG::$CUR_TAG"
         fi
@@ -54,7 +54,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Create Release
-      if: ${{ steps.build_package.outputs.exit_code == 0 }}
+      if: ${{ steps.OLD_PRE_TAG != 0 }}
       id: create_release
       uses: actions/create-release@v1
       env:
