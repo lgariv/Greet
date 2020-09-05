@@ -74,7 +74,9 @@ jobs:
         asset_name: ${{ steps.build_package.outputs.package }}
         asset_content_type: application/vnd.debian.binary-package
     - name: test
-      uses: technote-space/workflow-conclusion-action@v1
-      if: ${{ always() }} 
+      uses: avakar/set-deployment-status@v1
+      if: always()
       with:
-        status: success
+        state: ${{ success() }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
