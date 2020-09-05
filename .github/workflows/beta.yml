@@ -34,7 +34,9 @@ jobs:
         echo ::set-output name=exit_code::$?
     - name: Manage Version
       run: |
+        set +e
         git fetch --prune --unshallow --tags
+        set -e
         VERSION="$(cat control | grep Version | sed -n 's/Version: //gp')"
         echo "::set-env name=TWEAK_VER::$VERSION"
         CUR_TAG="$(git tag -l | grep beta)"
