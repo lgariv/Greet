@@ -6,4 +6,4 @@ Description: An awesome MobileSubstrate tweak!
 Maintainer: Lavie Gariv
 Author: Lavie Gariv
 Section: Tweaks
-Depends: mobilesubstrate (>= 0.9.5000), preferenceloader (>= 2.2.3)
+Depends: mobilesubstrate (>= 0.9.5000), firmware (>= 13.0)
