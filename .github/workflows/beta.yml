@@ -73,3 +73,7 @@ jobs:
         asset_path: ./packages/${{ steps.build_package.outputs.package }}
         asset_name: ${{ steps.build_package.outputs.package }}
         asset_content_type: application/vnd.debian.binary-package
+    - name: test
+      uses: technote-space/workflow-conclusion-action@v1
+      with:
+        status: success
