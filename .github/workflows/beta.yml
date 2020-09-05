@@ -31,6 +31,7 @@ jobs:
       run: |
         make package FINALPACKAGE=1
         echo "::set-output name=package::$(ls -t packages | head -n1)"
+        echo ::set-output name=exit_code::$?
     - name: Manage Version
       run: |
         git fetch --prune --unshallow --tags
@@ -50,6 +51,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Create Release
+      if: steps.build_package.outputs.exit_code == 0
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -60,6 +62,7 @@ jobs:
         draft: false
         prerelease: true
     - name: Upload Release Asset
+      if: steps.build_package.outputs.exit_code == 0
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
