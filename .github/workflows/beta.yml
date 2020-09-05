@@ -31,7 +31,7 @@ jobs:
       run: |
         make package FINALPACKAGE=1
         echo "::set-output name=package::$(ls -t packages | head -n1)"
-        echo ::set-output name=exit_code::$?
+        echo "::set-output name=exit_code::$?"
     - name: Manage Version
       run: |
         set +e
@@ -48,13 +48,13 @@ jobs:
         set -e
     - name: Delete Old Prerelease
       uses: dev-drprasad/delete-tag-and-release@v0.1.2
-      if: ${{ success() }}
+      if: ${{ steps.build_package.outputs.exit_code == 0 }}
       with:
         tag_name: ${{ env.OLD_PRE_TAG }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Create Release
-      if: ${{ always() }}
+      if: ${{ steps.build_package.outputs.exit_code == 0 }}
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -65,7 +65,7 @@ jobs:
         draft: false
         prerelease: true
     - name: Upload Release Asset
-      if: ${{ always() }}
+      if: ${{ steps.build_package.outputs.exit_code == 0 }}
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
