@@ -55,11 +55,19 @@
 @property (nonatomic,readonly) BOOL hasVisibleContent; 
 @end
 
+@interface SBFLockScreenDateView : UIView
+@end
+
+@interface CSCoverSheetView : UIView
+@property (nonatomic,retain) SBFLockScreenDateView *dateView;
+@end
+
 @interface CSCoverSheetViewController : UIViewController
-@property(assign, nonatomic) BOOL fux_alreadyAuthenticated;
-@property(nonatomic, getter=isAuthenticated) BOOL authenticated;
-@property(retain, nonatomic) CSMainPageContentViewController *mainPageContentViewController;
+@property (assign, nonatomic) BOOL fux_alreadyAuthenticated;
+@property (nonatomic, getter=isAuthenticated) BOOL authenticated;
+@property (retain, nonatomic) CSMainPageContentViewController *mainPageContentViewController;
 @property (nonatomic,retain) CSModalPresentationViewController * modalPresentationController;
+@property (retain, nonatomic) CSCoverSheetView *view;
 -(BOOL)isShowingMediaControls;
 -(BOOL)isInScreenOffMode;
 -(BOOL)biometricUnlockBehavior:(id)arg1 requestsUnlock:(id)arg2 withFeedback:(id)arg3 ;
@@ -152,7 +160,7 @@ UIVisualEffectView *visualEffectView;
 
     blurEffect = [UIBlurEffect effectWithBlurRadius:30.0f];
     if (!visualEffectView) visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    visualEffectView.frame = [self view].bounds;
+    visualEffectView.frame = [[[self view] dateView] superview].bounds;
     
     [DNDVC view].alpha = 0;
     visualEffectView.alpha = 0;
@@ -161,10 +169,11 @@ UIVisualEffectView *visualEffectView;
         [DNDVC view].alpha = 1;
         visualEffectView.alpha = 1;
 
-        [[self view] addSubview:visualEffectView];
-        [[self view] addSubview:[DNDVC view]];
-        [[self view] sendSubviewToBack:[DNDVC view]];
-        [[self view] sendSubviewToBack:visualEffectView];
+        [[[[self view] dateView] superview] addSubview:visualEffectView];
+        [[[[self view] dateView] superview] bringSubviewToFront:[[self view] dateView]];
+        [[[[self view] dateView] superview] addSubview:[DNDVC view]];
+        //[[[[self view] dateView] superview] sendSubviewToBack:[DNDVC view]];
+        //[[[[self view] dateView] superview] sendSubviewToBack:visualEffectView];
     }];
 }
 %end
@@ -200,3 +209,15 @@ UIVisualEffectView *visualEffectView;
     return %orig;
 }
 %end
+
+/*@interface CSCoverSheetViewBase : SBFTouchPassThroughView
+@end
+
+@interface CSModalView : CSCoverSheetViewBase
+@end
+
+%hook CSModalView
+-(void)_buttonTapped:(id)arg1 {
+    NSLog(@"[TTT] superview: %@",[[self superview] superview]);
+}
+%end*/
