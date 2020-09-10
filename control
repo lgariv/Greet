@@ -2,7 +2,7 @@ Package: com.miwix.greet
 Name: Greet
 Version: 1.0.0
 Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
+Description: That post-bedtime weather summary.
 Maintainer: Lavie Gariv
 Author: Lavie Gariv
 Section: Tweaks
