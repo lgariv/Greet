@@ -38,7 +38,7 @@
 @end
 
 @interface CSMainPageContentViewController : CSPageViewController
-@property (assign,nonatomic) BOOL useFakeBlur;                                                                         //@synthesize useFakeBlur=_useFakeBlur - In the implementation block
+//@property (assign,nonatomic) BOOL useFakeBlur;
 @property(readonly, nonatomic) CSCombinedListViewController *combinedListViewController;
 @end
 
@@ -152,7 +152,7 @@ BOOL shouldHideLabel = YES;
         [DNDVC view].alpha = 1;
         visualEffectView.alpha = 1;
 
-        if (![self.mainPageContentViewController useFakeBlur]) [[[[self view] dateView] superview] addSubview:visualEffectView];
+        /*if (![self.mainPageContentViewController useFakeBlur])*/ [[[[self view] dateView] superview] addSubview:visualEffectView];
         [[[[self view] dateView] superview] addSubview:[DNDVC view]];
         [[[[self view] dateView] superview] bringSubviewToFront:[[self view] dateView]];
         //[[[[self view] dateView] superview] sendSubviewToBack:[DNDVC view]];
