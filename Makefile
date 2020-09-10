@@ -6,10 +6,10 @@ INSTALL_TARGET_PROCESSES = SpringBoard
 
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME = Terrible
+TWEAK_NAME = Greet
 
-Terrible_FILES = Tweak.x
-Terrible_CFLAGS = -fobjc-arc
+Greet_FILES = Tweak.x
+Greet_CFLAGS = -fobjc-arc
 
 ADDITIONAL_OBJCFLAGS += -fobjc-arc -fdiagnostics-absolute-paths
 
