@@ -53,12 +53,18 @@ jobs:
         tag_name: ${{ env.OLD_PRE_TAG }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Update release
+      uses: johnwbyrd/update-release@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        asset: ./packages/${{ steps.build_package.outputs.package }}
+        draft: false
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ github.ref }}          
+        upload_url: ${{ steps.create_release.outputs.upload_url }}          
         asset_path: ./packages/${{ steps.build_package.outputs.package }}
         asset_name: ${{ steps.build_package.outputs.package }}
         asset_content_type: application/vnd.debian.binary-package
